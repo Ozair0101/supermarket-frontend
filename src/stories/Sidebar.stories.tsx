@@ -1,5 +1,5 @@
 import React from 'react';
-import { Story, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import Sidebar from '../components/ui/Sidebar';
 
 export default {
@@ -8,22 +8,36 @@ export default {
   parameters: {
     layout: 'fullscreen',
   },
-} as Meta;
+} as Meta<typeof Sidebar>;
 
-const Template: Story = (args) => (
-  <div className="flex">
-    <div className="w-64">
-      <Sidebar {...args} />
+type Story = StoryObj<typeof Sidebar>;
+
+export const Default: Story = {
+  args: {},
+  render: (args) => (
+    <div className="flex">
+      <div className="w-64">
+        <Sidebar {...args} />
+      </div>
+      <div className="flex-1 p-4">
+        <h1>Main Content Area</h1>
+        <p>This is where the main content would appear.</p>
+      </div>
     </div>
-    <div className="flex-1 p-4">
-      <h1>Main Content Area</h1>
-      <p>This is where the main content would appear.</p>
+  ),
+};
+
+export const Collapsed: Story = {
+  args: {},
+  render: (args) => (
+    <div className="flex">
+      <div className="w-20">
+        <Sidebar {...args} />
+      </div>
+      <div className="flex-1 p-4">
+        <h1>Main Content Area</h1>
+        <p>This is where the main content would appear.</p>
+      </div>
     </div>
-  </div>
-);
-
-export const Default = Template.bind({});
-Default.args = {};
-
-export const Collapsed = Template.bind({});
-Collapsed.args = {};
+  ),
+};
