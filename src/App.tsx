@@ -6,37 +6,27 @@ import Products from './pages/Products';
 import Categories from './pages/Categories';
 import Suppliers from './pages/Suppliers';
 import POS from './pages/POS';
-import TestComponent from './components/TestComponent';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
   return (
-    <Router>
-      <div className="p-4">
-        {/* Test button to verify Tailwind is working */}
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-          Test Button - If styled, Tailwind is working!
-        </button>
-        
+    <ThemeProvider>
+      <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={
-              <div>
-                <Dashboard />
-                <TestComponent />
-              </div>
-            } />
+            <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="categories" element={<Categories />} />
             <Route path="suppliers" element={<Suppliers />} />
             <Route path="pos" element={<POS />} />
-            <Route path="purchases" element={<div>Purchases</div>} />
-            <Route path="sales" element={<div>Sales</div>} />
-            <Route path="customers" element={<div>Customers</div>} />
-            <Route path="reports" element={<div>Reports</div>} />
+            <Route path="purchases" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Purchases</div>} />
+            <Route path="sales" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Sales</div>} />
+            <Route path="customers" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Customers</div>} />
+            <Route path="reports" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Reports</div>} />
           </Route>
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 
