@@ -1,70 +1,99 @@
-# React + TypeScript + Vite
+# Supermarket Management System - Modern UI Redesign
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a modern redesign of the supermarket management system UI using Tailwind CSS and a component library.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Design System
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development
+- **Dark/Light Mode**: Automatic theme switching with localStorage persistence
+- **Responsive Design**: Works on mobile, tablet, and desktop
+- **Accessibility**: WCAG compliant components
+- **Animations**: Subtle animations with Framer Motion
 
-## Expanding the ESLint configuration
+### UI Components
+- **Sidebar**: Collapsible navigation with icon support
+- **Header**: Search and user profile
+- **Dashboard**: Data visualization cards and charts
+- **POS System**: Barcode scanning optimized for tablets
+- **Data Tables**: Sortable, paginated tables with TanStack Table
+- **Forms**: Validation with React Hook Form and Zod
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Technologies Used
+- React 18 with TypeScript
+- Tailwind CSS v3
+- Framer Motion for animations
+- Lucide React for icons
+- TanStack Table for data tables
+- React Hook Form + Zod for form validation
+- React Router v6 for navigation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
-"# supermarket-frontend" 
+
+## Build
+
+```bash
+npm run build
+```
+
+## Component Library
+
+All UI components are located in `src/components/ui/`:
+
+- `Sidebar.tsx` - Collapsible navigation sidebar
+- `Header.tsx` - Application header with search
+- `Table.tsx` - Responsive data table with pagination
+- `Form.tsx` - Form components with validation
+- `ThemeContext.tsx` - Dark/light mode context
+
+## Pages
+
+- `Dashboard.tsx` - Main dashboard with metrics
+- `POS.tsx` - Point of Sale interface with barcode support
+- `Products.tsx` - Product management
+- `Categories.tsx` - Category management
+- `Suppliers.tsx` - Supplier management
+
+## Theme Customization
+
+The theme can be customized in `tailwind.config.js`. The default theme includes:
+
+- Primary color palette
+- Dark mode support
+- Responsive breakpoints
+- Custom component classes
+
+## Printer-Friendly Receipts
+
+The POS system includes printer-friendly receipt functionality. Use the "Print Receipt" button to generate a printable version.
+
+## Migration Steps
+
+1. Installed required dependencies
+2. Created new component library in `src/components/ui/`
+3. Implemented theme context for dark/light mode
+4. Redesigned all pages with modern UI components
+5. Updated routing and layout structure
+6. Added responsive design for all screen sizes
+7. Implemented barcode scanning in POS
+8. Added form validation and data tables
+
+## Storybook
+
+To run Storybook for component development:
+
+```bash
+npm run storybook
+```
+
+Stories for all components are located in `src/stories/`.
