@@ -11,7 +11,9 @@ import {
   X,
   Package2,
   Receipt,
-  UserCircle
+  UserCircle,
+  Truck,
+  FileBarChart
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -26,9 +28,11 @@ const sidebarItems: SidebarItem[] = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Products', href: '/products', icon: Package },
   { name: 'Categories', href: '/categories', icon: Package2 },
-  { name: 'Suppliers', href: '/suppliers', icon: Users },
+  { name: 'Suppliers', href: '/suppliers', icon: Truck },
+  { name: 'Customers', href: '/customers', icon: Users },
   { name: 'POS', href: '/pos', icon: ShoppingCart },
   { name: 'Sales', href: '/sales', icon: Receipt },
+  { name: 'Purchases', href: '/purchases', icon: FileBarChart },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
