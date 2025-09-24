@@ -6,6 +6,10 @@ import Products from './pages/Products';
 import Categories from './pages/Categories';
 import Suppliers from './pages/Suppliers';
 import POS from './pages/POS';
+import Purchases from './pages/Purchases';
+import Sales from './pages/Sales';
+import Customers from './pages/Customers';
+import Reports from './pages/Reports';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
@@ -19,10 +23,10 @@ function App() {
             <Route path="categories" element={<Categories />} />
             <Route path="suppliers" element={<Suppliers />} />
             <Route path="pos" element={<POS />} />
-            <Route path="purchases" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Purchases</div>} />
-            <Route path="sales" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Sales</div>} />
-            <Route path="customers" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Customers</div>} />
-            <Route path="reports" element={<div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">Reports</div>} />
+            <Route path="purchases" element={<Purchases />} />
+            <Route path="sales" element={<Sales />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="reports" element={<Reports />} />
           </Route>
         </Routes>
       </Router>
