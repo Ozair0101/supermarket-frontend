@@ -10,6 +10,7 @@ import Purchases from './pages/Purchases';
 import Sales from './pages/Sales';
 import Customers from './pages/Customers';
 import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -33,6 +34,7 @@ function App() {
               <Route path="sales" element={<Sales />} />
               <Route path="customers" element={<Customers />} />
               <Route path="reports" element={<Reports />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
         </Router>
