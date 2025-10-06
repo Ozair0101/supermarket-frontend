@@ -24,6 +24,7 @@ const POS: React.FC = () => {
   const [barcodeInput, setBarcodeInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   // Focus barcode input on component mount
@@ -148,10 +149,22 @@ const POS: React.FC = () => {
       
       // Clear the cart
       setCart([]);
-      alert(`Payment processed successfully: $${Number(total).toFixed(2)}`);
+      
+      // Show modern success message
+      setMessage({ type: 'success', text: `Payment processed successfully! Invoice: ${invoiceNumber}` });
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     } catch (err) {
       console.error('Error processing payment:', err);
-      alert('Failed to process payment. Please try again.');
+      setMessage({ type: 'error', text: 'Failed to process payment. Please try again.' });
+      
+      // Clear error message after 3 seconds
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     }
   };
 
@@ -184,6 +197,28 @@ const POS: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Modern success/error message display */}
+      {message && (
+        <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
+          message.type === 'success' 
+            ? 'bg-green-100 border border-green-400 text-green-700' 
+            : 'bg-red-100 border border-red-400 text-red-700'
+        }`}>
+          <div className="flex items-center">
+            {message.type === 'success' ? (
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            )}
+            <span>{message.text}</span>
+          </div>
+        </div>
+      )}
+
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Point of Sale</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
