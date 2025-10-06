@@ -311,7 +311,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      ${item.line_total.toFixed(2)}
+                      ${Number(item.line_total).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
@@ -336,7 +336,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
-              <span>${formData.sub_total.toFixed(2)}</span>
+              <span>${Number(formData.sub_total).toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-400">Discount:</span>
@@ -368,7 +368,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
             </div>
             <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
               <span className="font-medium">Total:</span>
-              <span className="font-medium">${formData.total.toFixed(2)}</span>
+              <span className="font-medium">${Number(formData.total).toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600 dark:text-gray-400">Paid:</span>
@@ -387,7 +387,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
             <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
               <span className="font-medium">Remaining:</span>
               <span className={`font-medium ${formData.remaining < 0 ? 'text-red-600' : ''}`}>
-                ${formData.remaining.toFixed(2)}
+                ${Number(formData.remaining).toFixed(2)}
               </span>
             </div>
           </div>
