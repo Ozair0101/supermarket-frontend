@@ -24,25 +24,50 @@ export interface SupplierFormData {
 }
 
 export const getSuppliers = async (): Promise<Supplier[]> => {
-  const response = await api.get<Supplier[]>('/suppliers');
-  return response.data;
+  try {
+    const response = await api.get<Supplier[]>('/suppliers');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching suppliers:', error);
+    throw error;
+  }
 };
 
 export const getSupplier = async (id: number): Promise<Supplier> => {
-  const response = await api.get<Supplier>(`/suppliers/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Supplier>(`/suppliers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching supplier with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const createSupplier = async (data: SupplierFormData): Promise<Supplier> => {
-  const response = await api.post<Supplier>('/suppliers', data);
-  return response.data;
+  try {
+    const response = await api.post<Supplier>('/suppliers', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating supplier:', error);
+    throw error;
+  }
 };
 
 export const updateSupplier = async (id: number, data: SupplierFormData): Promise<Supplier> => {
-  const response = await api.put<Supplier>(`/suppliers/${id}`, data);
-  return response.data;
+  try {
+    const response = await api.put<Supplier>(`/suppliers/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating supplier with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const deleteSupplier = async (id: number): Promise<void> => {
-  await api.delete(`/suppliers/${id}`);
+  try {
+    await api.delete(`/suppliers/${id}`);
+  } catch (error) {
+    console.error(`Error deleting supplier with id ${id}:`, error);
+    throw error;
+  }
 };
