@@ -49,25 +49,50 @@ export interface PurchaseFormData {
 }
 
 export const getPurchases = async (): Promise<Purchase[]> => {
-  const response = await api.get<Purchase[]>('/purchases');
-  return response.data;
+  try {
+    const response = await api.get<Purchase[]>('/purchases');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching purchases:', error);
+    throw error;
+  }
 };
 
 export const getPurchase = async (id: number): Promise<Purchase> => {
-  const response = await api.get<Purchase>(`/purchases/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Purchase>(`/purchases/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching purchase with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const createPurchase = async (data: PurchaseFormData): Promise<Purchase> => {
-  const response = await api.post<Purchase>('/purchases', data);
-  return response.data;
+  try {
+    const response = await api.post<Purchase>('/purchases', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating purchase:', error);
+    throw error;
+  }
 };
 
 export const updatePurchase = async (id: number, data: PurchaseFormData): Promise<Purchase> => {
-  const response = await api.put<Purchase>(`/purchases/${id}`, data);
-  return response.data;
+  try {
+    const response = await api.put<Purchase>(`/purchases/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating purchase with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const deletePurchase = async (id: number): Promise<void> => {
-  await api.delete(`/purchases/${id}`);
+  try {
+    await api.delete(`/purchases/${id}`);
+  } catch (error) {
+    console.error(`Error deleting purchase with id ${id}:`, error);
+    throw error;
+  }
 };
