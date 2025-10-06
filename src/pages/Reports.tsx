@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import {
+  DollarSign,
+  ShoppingCart,
+  Calendar,
+  TrendingUp,
+  TrendingDown,
+  Package,
+  AlertTriangle
+} from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import type { PieLabelRenderProps } from 'recharts';
-import { Calendar, TrendingUp, ShoppingCart, Package, DollarSign } from 'lucide-react';
 import { getSalesReport, getPurchasesReport, getInventoryReport } from '../services/saleService';
 import type { SalesReport, PurchasesReport, InventoryReport } from '../services/saleService';
+
+import { BarChart as BarChartIcon } from 'lucide-react';
 
 // Define chart data types that are compatible with recharts
 interface SalesDataPoint {
@@ -88,9 +98,9 @@ const Reports: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reports</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Business Reports</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Analyze your business performance
+          Analyze your business performance, inventory, revenue, and expenses
         </p>
       </div>
 
@@ -125,60 +135,86 @@ const Reports: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
-              <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Revenue</p>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                ${salesReport?.summary.total_revenue?.toFixed(2) || '0.00'}
-              </p>
-            </div>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
-              <ShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
+              <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Sales</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Revenue</h3>
               <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {salesReport?.summary.total_transactions || 0}
+                ${Number(salesReport?.summary?.total_revenue || 0).toFixed(2)}
               </p>
             </div>
           </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-              <Package className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Products</p>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {inventoryReport?.summary.total_products || 0}
-              </p>
-            </div>
+          <div className="mt-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Money earned from sales
+            </p>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-red-100 dark:bg-red-900">
-              <DollarSign className="h-6 w-6 text-red-600 dark:text-red-400" />
+              <ShoppingCart className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Low Stock Items</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Expenses</h3>
               <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {inventoryReport?.summary.total_low_stock_products || 0}
+                ${Number(purchasesReport?.summary?.total_purchases || 0).toFixed(2)}
               </p>
             </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Money spent on purchases
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="flex items-center">
+            <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+              <BarChartIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Net Profit</h3>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                ${Number((salesReport?.summary?.total_revenue || 0) - (purchasesReport?.summary?.total_purchases || 0)).toFixed(2)}
+              </p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Revenue minus expenses
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanation Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Understanding Your Reports</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-medium text-gray-900 dark:text-white mb-2">📊 Sales Report</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Shows your revenue from customer sales. This is the money coming into your business.
+            </p>
+          </div>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-medium text-gray-900 dark:text-white mb-2">🛒 Purchases Report</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Shows your expenses from supplier purchases. This is the money going out of your business.
+            </p>
+          </div>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-medium text-gray-900 dark:text-white mb-2">📦 Inventory Report</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Shows current stock levels. Make sure to purchase stock before selling to maintain inventory.
+            </p>
           </div>
         </div>
       </div>
@@ -205,7 +241,18 @@ const Reports: React.FC = () => {
 
         {/* Inventory Chart */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Inventory Status</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white">Inventory Status</h2>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Total Products: {inventoryReport?.summary?.total_products || 0} | 
+              Low Stock: {inventoryReport?.summary?.total_low_stock_products || 0}
+            </div>
+          </div>
+          <div className="mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Current stock levels. Products with low stock need to be reordered.
+            </p>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
