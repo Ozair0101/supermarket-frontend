@@ -1,77 +1,101 @@
 import api from './api';
+import type { Product } from './productService';
 
 export interface SaleItem {
   id?: number;
-  sale_id?: number;
   product_id: number;
-  batch_number?: string;
-  expiry_date?: string;
+  product?: Product;
   quantity: number;
   unit_price: number;
   discount: number;
   line_total: number;
-  product?: any;
 }
 
 export interface Sale {
   id?: number;
   customer_id?: number;
-  created_by?: number;
   invoice_number?: string;
+  sale_date: string;
   sub_total: number;
   discount: number;
   tax: number;
   total: number;
   paid: number;
   remaining: number;
-  status: 'paid' | 'partial' | 'credit';
-  payment_method?: string;
-  sale_date?: string;
-  branch_id?: number;
+  status: 'paid' | 'unpaid' | 'partial';
   items: SaleItem[];
-  customer?: any;
-  createdBy?: any;
+  customer?: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface SaleFormData {
   customer_id?: number;
-  created_by?: number;
   invoice_number?: string;
+  sale_date: string;
   sub_total: number;
   discount: number;
   tax: number;
   total: number;
   paid: number;
   remaining: number;
-  status: 'paid' | 'partial' | 'credit';
-  payment_method?: string;
-  sale_date?: string;
-  branch_id?: number;
-  items: SaleItem[];
+  status: 'paid' | 'unpaid' | 'partial';
+  items: Omit<SaleItem, 'id' | 'product'>[];
 }
 
+// Get all sales
 export const getSales = async (): Promise<Sale[]> => {
-  const response = await api.get<Sale[]>('/sales');
-  return response.data;
+  try {
+    const response = await api.get<Sale[]>('/sales');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching sales:', error);
+    throw error;
+  }
 };
 
+// Get sale by ID
 export const getSale = async (id: number): Promise<Sale> => {
-  const response = await api.get<Sale>(`/sales/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Sale>(`/sales/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching sale with ID ${id}:`, error);
+    throw error;
+  }
 };
 
+// Create new sale
 export const createSale = async (data: SaleFormData): Promise<Sale> => {
-  const response = await api.post<Sale>('/sales', data);
-  return response.data;
+  try {
+    const response = await api.post<Sale>('/sales', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating sale:', error);
+    throw error;
+  }
 };
 
+// Update sale
 export const updateSale = async (id: number, data: SaleFormData): Promise<Sale> => {
-  const response = await api.put<Sale>(`/sales/${id}`, data);
-  return response.data;
+  try {
+    const response = await api.put<Sale>(`/sales/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating sale with ID ${id}:`, error);
+    throw error;
+  }
 };
 
+// Delete sale
 export const deleteSale = async (id: number): Promise<void> => {
-  await api.delete(`/sales/${id}`);
+  try {
+    await api.delete(`/sales/${id}`);
+  } catch (error) {
+    console.error(`Error deleting sale with ID ${id}:`, error);
+    throw error;
+  }
 };
 
 // Report endpoints
@@ -101,27 +125,42 @@ export interface InventoryReport {
 }
 
 export const getSalesReport = async (startDate?: string, endDate?: string): Promise<SalesReport> => {
-  const params = new URLSearchParams();
-  if (startDate) params.append('start_date', startDate);
-  if (endDate) params.append('end_date', endDate);
-  
-  const response = await api.get<SalesReport>(`/reports/sales?${params.toString()}`);
-  return response.data;
+  try {
+    const params = new URLSearchParams();
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+    
+    const response = await api.get<SalesReport>(`/reports/sales?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching sales report:', error);
+    throw error;
+  }
 };
 
 export const getPurchasesReport = async (startDate?: string, endDate?: string): Promise<PurchasesReport> => {
-  const params = new URLSearchParams();
-  if (startDate) params.append('start_date', startDate);
-  if (endDate) params.append('end_date', endDate);
-  
-  const response = await api.get<PurchasesReport>(`/reports/purchases?${params.toString()}`);
-  return response.data;
+  try {
+    const params = new URLSearchParams();
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+    
+    const response = await api.get<PurchasesReport>(`/reports/purchases?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching purchases report:', error);
+    throw error;
+  }
 };
 
 export const getInventoryReport = async (lowStockThreshold?: number): Promise<InventoryReport> => {
-  const params = new URLSearchParams();
-  if (lowStockThreshold) params.append('low_stock_threshold', lowStockThreshold.toString());
-  
-  const response = await api.get<InventoryReport>(`/reports/inventory?${params.toString()}`);
-  return response.data;
+  try {
+    const params = new URLSearchParams();
+    if (lowStockThreshold) params.append('low_stock_threshold', lowStockThreshold.toString());
+    
+    const response = await api.get<InventoryReport>(`/reports/inventory?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching inventory report:', error);
+    throw error;
+  }
 };
