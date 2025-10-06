@@ -148,28 +148,28 @@ const PurchaseDetails: React.FC = () => {
             <dl className="space-y-4">
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Subtotal</dt>
-                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${purchase.sub_total.toFixed(2)}</dd>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${Number(purchase.sub_total).toFixed(2)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Discount</dt>
-                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${purchase.discount.toFixed(2)}</dd>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${Number(purchase.discount).toFixed(2)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Tax</dt>
-                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${purchase.tax.toFixed(2)}</dd>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${Number(purchase.tax).toFixed(2)}</dd>
               </div>
               <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
                 <dt className="text-sm font-medium text-gray-900 dark:text-white">Total</dt>
-                <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-white">${purchase.total.toFixed(2)}</dd>
+                <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-white">${Number(purchase.total).toFixed(2)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Paid</dt>
-                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${purchase.paid.toFixed(2)}</dd>
+                <dd className="mt-1 text-sm text-gray-900 dark:text-white">${Number(purchase.paid).toFixed(2)}</dd>
               </div>
               <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
                 <dt className="text-sm font-medium text-gray-900 dark:text-white">Remaining</dt>
                 <dd className={`mt-1 text-sm font-medium ${purchase.remaining < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
-                  ${purchase.remaining.toFixed(2)}
+                  ${Number(purchase.remaining).toFixed(2)}
                 </dd>
               </div>
             </dl>
@@ -209,13 +209,13 @@ const PurchaseDetails: React.FC = () => {
                       {item.quantity}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      ${item.unit_cost.toFixed(2)}
+                      ${Number(item.unit_cost).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      ${item.discount.toFixed(2)}
+                      ${Number(item.discount).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      ${item.line_total.toFixed(2)}
+                      ${Number(item.line_total).toFixed(2)}
                     </td>
                   </tr>
                 ))}
