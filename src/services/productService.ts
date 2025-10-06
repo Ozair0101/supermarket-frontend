@@ -33,25 +33,50 @@ export interface ProductFormData {
 }
 
 export const getProducts = async (): Promise<Product[]> => {
-  const response = await api.get<Product[]>('/products');
-  return response.data;
+  try {
+    const response = await api.get<Product[]>('/products');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
 };
 
 export const getProduct = async (id: number): Promise<Product> => {
-  const response = await api.get<Product>(`/products/${id}`);
-  return response.data;
+  try {
+    const response = await api.get<Product>(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const createProduct = async (data: ProductFormData): Promise<Product> => {
-  const response = await api.post<Product>('/products', data);
-  return response.data;
+  try {
+    const response = await api.post<Product>('/products', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
 };
 
 export const updateProduct = async (id: number, data: ProductFormData): Promise<Product> => {
-  const response = await api.put<Product>(`/products/${id}`, data);
-  return response.data;
+  try {
+    const response = await api.put<Product>(`/products/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating product with id ${id}:`, error);
+    throw error;
+  }
 };
 
 export const deleteProduct = async (id: number): Promise<void> => {
-  await api.delete(`/products/${id}`);
+  try {
+    await api.delete(`/products/${id}`);
+  } catch (error) {
+    console.error(`Error deleting product with id ${id}:`, error);
+    throw error;
+  }
 };
