@@ -94,7 +94,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
       const product = products.find(p => p.id === value);
       if (product) {
         newItems[index].product_name = product.name;
-        newItems[index].unit_price = product.selling_price;
+        newItems[index].unit_price = Number(product.selling_price);
       }
     }
 
@@ -326,7 +326,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                      ${item.line_total.toFixed(2)}
+                      ${Number(item.line_total).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
@@ -351,19 +351,19 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
         <div className="space-y-4">
           <div className="flex justify-between">
             <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
-            <span className="font-medium">${formData.sub_total.toFixed(2)}</span>
+            <span className="font-medium">${Number(formData.sub_total).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600 dark:text-gray-400">Discount:</span>
-            <span className="font-medium">-${formData.discount.toFixed(2)}</span>
+            <span className="font-medium">-${Number(formData.discount).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600 dark:text-gray-400">Tax:</span>
-            <span className="font-medium">${formData.tax.toFixed(2)}</span>
+            <span className="font-medium">${Number(formData.tax).toFixed(2)}</span>
           </div>
           <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
             <span className="text-lg font-medium text-gray-900 dark:text-white">Total:</span>
-            <span className="text-lg font-medium text-gray-900 dark:text-white">${formData.total.toFixed(2)}</span>
+            <span className="text-lg font-medium text-gray-900 dark:text-white">${Number(formData.total).toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600 dark:text-gray-400">Paid:</span>
@@ -380,7 +380,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
           <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
             <span className="text-lg font-medium text-gray-900 dark:text-white">Remaining:</span>
             <span className={`text-lg font-medium ${formData.remaining < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
-              ${formData.remaining.toFixed(2)}
+              ${Number(formData.remaining).toFixed(2)}
             </span>
           </div>
         </div>
