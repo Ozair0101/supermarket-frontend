@@ -120,8 +120,12 @@ const POS: React.FC = () => {
     if (cart.length === 0) return;
     
     try {
+      // Generate invoice number
+      const invoiceNumber = `INV-${Date.now()}`;
+      
       // Create sale data
       const saleData = {
+        invoice_number: invoiceNumber,
         sale_date: new Date().toISOString().split('T')[0],
         sub_total: subtotal,
         discount: 0,
