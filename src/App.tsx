@@ -13,6 +13,14 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NewCustomer from './pages/NewCustomer';
+import EditCustomer from './pages/EditCustomer';
+import CustomerDetails from './pages/CustomerDetails';
+import NewPurchase from './pages/NewPurchase';
+import PurchaseDetails from './pages/PurchaseDetails';
+import NewSale from './pages/NewSale';
+import EditSale from './pages/EditSale';
+import SaleDetails from './pages/SaleDetails';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -31,8 +39,16 @@ function App() {
               <Route path="suppliers" element={<Suppliers />} />
               <Route path="pos" element={<POS />} />
               <Route path="purchases" element={<Purchases />} />
+              <Route path="purchases/new" element={<NewPurchase />} />
+              <Route path="purchases/:id" element={<PurchaseDetails />} />
               <Route path="sales" element={<Sales />} />
+              <Route path="sales/new" element={<NewSale />} />
+              <Route path="sales/:id" element={<SaleDetails />} />
+              <Route path="sales/:id/edit" element={<EditSale />} />
               <Route path="customers" element={<Customers />} />
+              <Route path="customers/new" element={<NewCustomer />} />
+              <Route path="customers/:id" element={<CustomerDetails />} />
+              <Route path="customers/:id/edit" element={<EditCustomer />} />
               <Route path="reports" element={<Reports />} />
               <Route path="settings" element={<Settings />} />
             </Route>
