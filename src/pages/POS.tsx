@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Barcode, Plus, Minus, Trash2, Printer, CreditCard, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getProducts } from '../services/productService';
+import { createSale } from '../services/saleService';
+import type { Product as ApiProduct } from '../services/productService';
 
-interface Product {
+interface PosProduct {
   id: number;
   name: string;
   price: number;
@@ -10,22 +13,17 @@ interface Product {
   category: string;
 }
 
-interface CartItem extends Product {
+interface CartItem extends PosProduct {
   quantity: number;
 }
 
 const POS: React.FC = () => {
-  const [products] = useState<Product[]>([
-    { id: 1, name: 'Organic Apples', price: 2.99, barcode: '123456789012', category: 'Fruits' },
-    { id: 2, name: 'Whole Milk', price: 3.49, barcode: '234567890123', category: 'Dairy' },
-    { id: 3, name: 'Whole Wheat Bread', price: 2.79, barcode: '345678901234', category: 'Bakery' },
-    { id: 4, name: 'Free Range Eggs', price: 4.99, barcode: '456789012345', category: 'Dairy' },
-    { id: 5, name: 'Organic Bananas', price: 1.99, barcode: '567890123456', category: 'Fruits' },
-  ]);
-
+  const [products, setProducts] = useState<PosProduct[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [barcodeInput, setBarcodeInput] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   // Focus barcode input on component mount
@@ -33,7 +31,28 @@ const POS: React.FC = () => {
     if (barcodeInputRef.current) {
       barcodeInputRef.current.focus();
     }
+    fetchProducts();
   }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await getProducts();
+      // Convert API products to the format we need for the POS
+      const formattedProducts = data.map(product => ({
+        id: product.id,
+        name: product.name,
+        price: parseFloat(product.selling_price),
+        barcode: product.barcode || '',
+        category: '', // We might need to fetch categories separately
+      }));
+      setProducts(formattedProducts);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setError('Failed to load products');
+      setLoading(false);
+    }
+  };
 
   // Handle barcode scanning
   const handleBarcodeScan = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,7 +66,7 @@ const POS: React.FC = () => {
   };
 
   // Add product to cart
-  const addToCart = (product: Product) => {
+  const addToCart = (product: PosProduct) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
@@ -81,31 +100,83 @@ const POS: React.FC = () => {
 
   // Calculate totals
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const tax = subtotal * 0.08;
+  const tax = subtotal * 0.08; // 8% tax
   const total = subtotal + tax;
 
   // Filter products based on search term
   const filteredProducts = products.filter(
     product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.barcode.includes(searchTerm)
+      (product.barcode && product.barcode.includes(searchTerm))
   );
 
   // Handle manual product selection
-  const handleProductSelect = (product: Product) => {
+  const handleProductSelect = (product: PosProduct) => {
     addToCart(product);
   };
 
   // Handle payment
-  const handlePayment = () => {
-    alert(`Payment processed: $${Number(total).toFixed(2)}`);
-    setCart([]);
+  const handlePayment = async () => {
+    if (cart.length === 0) return;
+    
+    try {
+      // Create sale data
+      const saleData = {
+        sale_date: new Date().toISOString().split('T')[0],
+        sub_total: subtotal,
+        discount: 0,
+        tax: tax,
+        total: total,
+        paid: total, // For simplicity, assume full payment
+        remaining: 0,
+        status: 'paid' as const,
+        items: cart.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          unit_price: item.price,
+          discount: 0,
+          line_total: item.price * item.quantity
+        }))
+      };
+      
+      // Save the sale
+      await createSale(saleData);
+      
+      // Clear the cart
+      setCart([]);
+      alert(`Payment processed successfully: $${Number(total).toFixed(2)}`);
+    } catch (err) {
+      console.error('Error processing payment:', err);
+      alert('Failed to process payment. Please try again.');
+    }
   };
 
   // Print receipt
   const handlePrintReceipt = () => {
     window.print();
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 dark:bg-red-900 rounded-lg p-4">
+        <p className="text-red-800 dark:text-red-200">{error}</p>
+        <button 
+          onClick={fetchProducts}
+          className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
