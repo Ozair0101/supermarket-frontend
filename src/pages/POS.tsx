@@ -98,7 +98,7 @@ const POS: React.FC = () => {
 
   // Handle payment
   const handlePayment = () => {
-    alert(`Payment processed: $${total.toFixed(2)}`);
+    alert(`Payment processed: $${Number(total).toFixed(2)}`);
     setCart([]);
   };
 
@@ -192,7 +192,7 @@ const POS: React.FC = () => {
                           </div>
                           <div className="text-right">
                             <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              ${product.price.toFixed(2)}
+                              ${Number(product.price).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -237,12 +237,12 @@ const POS: React.FC = () => {
                               {item.name}
                             </p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              ${item.price.toFixed(2)} × {item.quantity}
+                              ${Number(item.price).toFixed(2)} × {item.quantity}
                             </p>
                           </div>
                           <div className="flex items-center space-x-2">
                             <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ${(Number(item.price) * item.quantity).toFixed(2)}
                             </p>
                             <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md">
                               <button
@@ -279,15 +279,15 @@ const POS: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                  <span className="font-medium">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium">${Number(subtotal).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600 dark:text-gray-400">Tax (8%)</span>
-                  <span className="font-medium">${tax.toFixed(2)}</span>
+                  <span className="font-medium">${Number(tax).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-base font-medium border-t border-gray-200 dark:border-gray-700 pt-2">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>${Number(total).toFixed(2)}</span>
                 </div>
               </div>
 
