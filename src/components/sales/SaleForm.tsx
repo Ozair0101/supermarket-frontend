@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getProduct } from '../../services/productService';
+import { getProducts } from '../../services/productService';
 import type { Product } from '../../services/productService';
 
 interface SaleItem {
@@ -53,9 +53,8 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // In a real app, you would fetch products from the API
-        // const productData = await getAllProducts();
-        // setProducts(productData);
+        const productData = await getProducts();
+        setProducts(productData);
         setLoadingProducts(false);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -168,6 +167,14 @@ const SaleForm: React.FC<SaleFormProps> = ({ onSubmit, onCancel, initialData }) 
       }));
     }
   };
+
+  if (loadingProducts) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
