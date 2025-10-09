@@ -32,9 +32,14 @@ export interface ProductFormData {
   track_expiry: boolean;
 }
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getProducts = async (hasInventory: boolean = false): Promise<Product[]> => {
   try {
-    const response = await api.get<Product[]>('/products');
+    const params = new URLSearchParams();
+    if (hasInventory) {
+      params.append('has_inventory', '1');
+    }
+    
+    const response = await api.get<Product[]>(`/products?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);

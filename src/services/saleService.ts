@@ -71,8 +71,17 @@ export const createSale = async (data: SaleFormData): Promise<Sale> => {
   try {
     const response = await api.post<Sale>('/sales', data);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating sale:', error);
+    
+    // Handle inventory validation errors
+    if (error.response?.status === 422) {
+      const errors = error.response.data.errors;
+      if (errors && errors.items) {
+        throw new Error(errors.items[0]);
+      }
+    }
+    
     throw error;
   }
 };
