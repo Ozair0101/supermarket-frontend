@@ -1,43 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit, Trash2, ArrowLeft, Printer } from 'lucide-react';
-// import { getSale, deleteSale } from '../services/saleService';
-// import type { Sale } from '../services/saleService';
+import { getSale, deleteSale } from '../services/saleService';
+import type { Sale } from '../services/saleService';
 
 const SaleDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [sale, setSale] = useState<any | null>(null);
+  const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // TODO: Implement getSale service
-    // if (id) {
-    //   fetchSale(parseInt(id));
-    // }
-    setLoading(false);
+    if (id) {
+      fetchSale(parseInt(id));
+    }
   }, [id]);
 
-  // const fetchSale = async (saleId: number) => {
-  //   try {
-  //     const data = await getSale(saleId);
-  //     setSale(data);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.error('Error fetching sale:', err);
-  //     setError('Failed to load sale details');
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchSale = async (saleId: number) => {
+    try {
+      const data = await getSale(saleId);
+      setSale(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching sale:', err);
+      setError('Failed to load sale details');
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!sale?.id) return;
     
     if (window.confirm('Are you sure you want to delete this sale?')) {
       try {
-        // TODO: Implement deleteSale service
-        // await deleteSale(sale.id);
+        await deleteSale(sale.id);
         navigate('/sales');
       } catch (err) {
         console.error('Error deleting sale:', err);
