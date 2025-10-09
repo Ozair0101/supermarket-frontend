@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-// import { createSale } from '../services/saleService';
-// import type { SaleFormData } from '../services/saleService';
+import { createSale } from '../services/saleService';
+import type { SaleFormData } from '../services/saleService';
 import SaleForm from '../components/sales/SaleForm';
 
 const NewSale: React.FC = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: SaleFormData) => {
     try {
-      // TODO: Implement createSale service
-      // await createSale(data);
+      await createSale(data);
       setMessage({ type: 'success', text: 'Sale created successfully!' });
       setTimeout(() => {
         navigate('/sales');
       }, 1500);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to create sale';
-      setMessage({ type: 'error', text: errorMessage });
+      // Handle inventory validation errors
+      if (err.message) {
+        setMessage({ type: 'error', text: err.message });
+      } else {
+        const errorMessage = err.response?.data?.message || 'Failed to create sale';
+        setMessage({ type: 'error', text: errorMessage });
+      }
       console.error('Error creating sale:', err);
     }
   };
