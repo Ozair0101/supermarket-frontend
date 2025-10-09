@@ -1,50 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-// import { getSale, updateSale } from '../services/saleService';
-// import type { Sale } from '../services/saleService';
+import { getSale, updateSale } from '../services/saleService';
+import type { Sale } from '../services/saleService';
 import SaleForm from '../components/sales/SaleForm';
 
 const EditSale: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [sale, setSale] = useState<any | null>(null);
+  const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    // TODO: Implement getSale service
-    // if (id) {
-    //   fetchSale(parseInt(id));
-    // }
-    setLoading(false);
+    if (id) {
+      fetchSale(parseInt(id));
+    }
   }, [id]);
 
-  // const fetchSale = async (saleId: number) => {
-  //   try {
-  //     const data = await getSale(saleId);
-  //     setSale(data);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.error('Error fetching sale:', err);
-  //     setMessage({ type: 'error', text: 'Failed to load sale details' });
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchSale = async (saleId: number) => {
+    try {
+      const data = await getSale(saleId);
+      setSale(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching sale:', err);
+      setMessage({ type: 'error', text: 'Failed to load sale details' });
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (data: any) => {
+    if (!sale?.id) return;
+    
     try {
-      // TODO: Implement updateSale service
-      // if (id) {
-      //   await updateSale(parseInt(id), data);
-      //   setMessage({ type: 'success', text: 'Sale updated successfully!' });
-      //   setTimeout(() => {
-      //     navigate('/sales');
-      //   }, 1500);
-      // }
+      await updateSale(sale.id, data);
+      setMessage({ type: 'success', text: 'Sale updated successfully!' });
+      setTimeout(() => {
+        navigate('/sales');
+      }, 1500);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to update sale';
-      setMessage({ type: 'error', text: errorMessage });
+      // Handle inventory validation errors
+      if (err.message) {
+        setMessage({ type: 'error', text: err.message });
+      } else {
+        const errorMessage = err.response?.data?.message || 'Failed to update sale';
+        setMessage({ type: 'error', text: errorMessage });
+      }
       console.error('Error updating sale:', err);
     }
   };
