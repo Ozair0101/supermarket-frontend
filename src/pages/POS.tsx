@@ -37,7 +37,8 @@ const POS: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const data = await getProducts();
+      // Fetch only products with inventory (quantity > 0)
+      const data = await getProducts(true);
       // Convert API products to the format we need for the POS
       const formattedProducts = data.map(product => ({
         id: product.id,
@@ -157,14 +158,20 @@ const POS: React.FC = () => {
       setTimeout(() => {
         setMessage(null);
       }, 3000);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error processing payment:', err);
-      setMessage({ type: 'error', text: 'Failed to process payment. Please try again.' });
       
-      // Clear error message after 3 seconds
+      // Handle inventory validation errors
+      if (err.message) {
+        setMessage({ type: 'error', text: err.message });
+      } else {
+        setMessage({ type: 'error', text: 'Failed to process payment. Please try again.' });
+      }
+      
+      // Clear error message after 5 seconds
       setTimeout(() => {
         setMessage(null);
-      }, 3000);
+      }, 5000);
     }
   };
 
@@ -274,44 +281,51 @@ const POS: React.FC = () => {
           {/* Product List */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex-1 overflow-hidden">
             <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Products
+              Products in Stock
             </h2>
-            <div className="overflow-y-auto h-[calc(100%-2rem)]">
-              <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                <AnimatePresence>
-                  {filteredProducts.map((product) => (
-                    <motion.li
-                      key={product.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="py-3"
-                    >
-                      <button
-                        onClick={() => handleProductSelect(product)}
-                        className="w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-2 py-1 transition-colors"
+            {products.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <p>No products available in stock</p>
+                <p className="text-sm mt-2">Purchase products to add them to inventory</p>
+              </div>
+            ) : (
+              <div className="overflow-y-auto h-[calc(100%-2rem)]">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                  <AnimatePresence>
+                    {filteredProducts.map((product) => (
+                      <motion.li
+                        key={product.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="py-3"
                       >
-                        <div className="flex justify-between">
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              {product.name}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {product.category} • {product.barcode}
-                            </p>
+                        <button
+                          onClick={() => handleProductSelect(product)}
+                          className="w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-2 py-1 transition-colors"
+                        >
+                          <div className="flex justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                {product.name}
+                              </p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {product.category} • {product.barcode}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                ${Number(product.price).toFixed(2)}
+                              </p>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              ${Number(product.price).toFixed(2)}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </ul>
-            </div>
+                        </button>
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 
