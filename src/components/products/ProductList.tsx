@@ -42,11 +42,6 @@ const ProductList: React.FC = () => {
                 <p className="text-sm font-medium text-indigo-600 truncate">
                   {product.name}
                 </p>
-                <div className="ml-2 flex-shrink-0 flex">
-                  <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                    ${product.selling_price}
-                  </p>
-                </div>
               </div>
               <div className="mt-2 sm:flex sm:justify-between">
                 <div className="sm:flex">
@@ -54,12 +49,15 @@ const ProductList: React.FC = () => {
                     SKU: {product.sku || 'N/A'}
                   </p>
                   <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                    Quantity: {product.quantity}
+                    Reorder Threshold: {product.reorder_threshold}
                   </p>
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                   <p>Category ID: {product.category_id || 'N/A'}</p>
                 </div>
+              </div>
+              <div className="mt-2 flex items-center text-sm text-gray-500">
+                <p>Track Expiry: {product.track_expiry ? 'Yes' : 'No'}</p>
               </div>
             </div>
           </li>
