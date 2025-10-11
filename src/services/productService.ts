@@ -6,11 +6,7 @@ export interface Product {
   branch_id: number | null;
   name: string;
   sku: string | null;
-  barcode: string | null;
   description: string | null;
-  cost_price: string;
-  selling_price: string;
-  quantity: string;
   reorder_threshold: string;
   track_expiry: boolean;
   created_at: string;
@@ -23,11 +19,7 @@ export interface ProductFormData {
   branch_id?: number;
   name: string;
   sku?: string;
-  barcode?: string;
   description?: string;
-  cost_price: string;
-  selling_price: string;
-  quantity: string;
   reorder_threshold: string;
   track_expiry: boolean;
 }

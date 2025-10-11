@@ -4,10 +4,12 @@ export interface PurchaseItem {
   id?: number;
   purchase_id?: number;
   product_id: number;
+  barcode?: string;
   batch_number?: string;
   expiry_date?: string;
   quantity: number;
   unit_cost: number;
+  selling_price: number;
   discount: number;
   line_total: number;
   product?: any;

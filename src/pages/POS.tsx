@@ -8,7 +8,9 @@ import type { Product as ApiProduct } from '../services/productService';
 interface PosProduct {
   id: number;
   name: string;
-  price: number;
+  // Note: We no longer have selling_price on the product model
+  // In a real implementation, you would need to fetch pricing from purchase items
+  price: number; // This will need to be set appropriately
   barcode: string;
   category: string;
 }
@@ -40,11 +42,14 @@ const POS: React.FC = () => {
       // Fetch only products with inventory (quantity > 0)
       const data = await getProducts(true);
       // Convert API products to the format we need for the POS
+      // Note: In a real implementation, you would fetch pricing information from purchase items
       const formattedProducts = data.map(product => ({
         id: product.id,
         name: product.name,
-        price: parseFloat(product.selling_price),
-        barcode: product.barcode || '',
+        // For now, we'll set a default price of 0
+        // In a real implementation, you would fetch the actual price from purchase items
+        price: 0,
+        barcode: product.sku || '', // Using SKU as barcode for now
         category: '', // We might need to fetch categories separately
       }));
       setProducts(formattedProducts);
