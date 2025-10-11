@@ -61,7 +61,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
     const updatedItems = [...formData.items];
     updatedItems[index] = {
       ...updatedItems[index],
-      [field]: field === 'product_id' || field === 'quantity' || field === 'unit_cost' || field === 'discount' 
+      [field]: field === 'product_id' || field === 'quantity' || field === 'unit_cost' || field === 'discount' ||  field === 'selling_price'
         ? Number(value) 
         : value
     };
@@ -89,6 +89,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
           product_id: 0,
           quantity: 1,
           unit_cost: 0,
+          selling_price: 0,
           discount: 0,
           line_total: 0
         }
@@ -244,10 +245,16 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
                     Product
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Barcode
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Quantity
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Unit Cost
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Selling Price
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Discount
@@ -280,6 +287,14 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
+                        type="text"
+                        value={item.barcode || ''}
+                        onChange={(e) => handleItemChange(index, 'barcode', e.target.value)}
+                        className="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
                         type="number"
                         min="0"
                         step="0.01"
@@ -296,6 +311,17 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ initialData, onSubmit, onCa
                         step="0.01"
                         value={item.unit_cost}
                         onChange={(e) => handleItemChange(index, 'unit_cost', e.target.value)}
+                        required
+                        className="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={item.selling_price}
+                        onChange={(e) => handleItemChange(index, 'selling_price', e.target.value)}
                         required
                         className="block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                       />
