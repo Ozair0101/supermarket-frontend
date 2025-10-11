@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ProductFormData } from '../../services/productService';
+import { getCategories, type Category } from '../../services/categoryService';
 
 interface ProductFormProps {
   initialData?: ProductFormData;
@@ -11,13 +12,24 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit, onCanc
   const [formData, setFormData] = useState<ProductFormData>(
     initialData || {
       name: '',
-      cost_price: '',
-      selling_price: '',
-      quantity: '',
       reorder_threshold: '',
       track_expiry: false,
     }
   );
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategories();
+        setCategories(categoryData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -54,6 +66,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit, onCanc
       </div>
 
       <div>
+        <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">
+          Category
+        </label>
+        <select
+          id="category_id"
+          name="category_id"
+          value={formData.category_id || ''}
+          onChange={handleChange}
+          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
         <label htmlFor="sku" className="block text-sm font-medium text-gray-700">
           SKU
         </label>
@@ -67,74 +99,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit, onCanc
         />
       </div>
 
-      <div>
-        <label htmlFor="barcode" className="block text-sm font-medium text-gray-700">
-          Barcode
-        </label>
-        <input
-          type="text"
-          name="barcode"
-          id="barcode"
-          value={formData.barcode || ''}
-          onChange={handleChange}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="cost_price" className="block text-sm font-medium text-gray-700">
-            Cost Price
-          </label>
-          <input
-            type="number"
-            name="cost_price"
-            id="cost_price"
-            value={formData.cost_price}
-            onChange={handleChange}
-            required
-            step="0.01"
-            min="0"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="selling_price" className="block text-sm font-medium text-gray-700">
-            Selling Price
-          </label>
-          <input
-            type="number"
-            name="selling_price"
-            id="selling_price"
-            value={formData.selling_price}
-            onChange={handleChange}
-            required
-            step="0.01"
-            min="0"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-        <div>
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-            Quantity
-          </label>
-          <input
-            type="number"
-            name="quantity"
-            id="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            required
-            step="0.01"
-            min="0"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-
         <div>
           <label htmlFor="reorder_threshold" className="block text-sm font-medium text-gray-700">
             Reorder Threshold
