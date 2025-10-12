@@ -43,8 +43,8 @@ const Reports: React.FC = () => {
   const fetchReports = async () => {
     try {
       const [salesData, purchasesData, inventoryData] = await Promise.all([
-        getSalesReport(),
-        getPurchasesReport(),
+        getSalesReport(dateRange.start, dateRange.end),
+        getPurchasesReport(dateRange.start, dateRange.end),
         getInventoryReport()
       ]);
       
@@ -58,22 +58,17 @@ const Reports: React.FC = () => {
     }
   };
 
-  // Mock data for charts - in a real app, this would come from the API
-  const salesData: SalesDataPoint[] = [
-    { name: 'Mon', sales: 4000, revenue: 2400 },
-    { name: 'Tue', sales: 3000, revenue: 1398 },
-    { name: 'Wed', sales: 2000, revenue: 9800 },
-    { name: 'Thu', sales: 2780, revenue: 3908 },
-    { name: 'Fri', sales: 1890, revenue: 4800 },
-    { name: 'Sat', sales: 2390, revenue: 3800 },
-    { name: 'Sun', sales: 3490, revenue: 4300 },
-  ];
+  // Process sales data for the chart
+  const salesData: SalesDataPoint[] = salesReport?.chart_data 
+    ? Object.entries(salesReport.chart_data).map(([date, data]) => ({
+        name: new Date(date).toLocaleDateString('en-US', { weekday: 'short' }),
+        sales: data.sales_count,
+        revenue: data.revenue
+      }))
+    : [];
 
-  const inventoryData: InventoryDataPoint[] = [
-    { name: 'In Stock', value: 75 },
-    { name: 'Low Stock', value: 15 },
-    { name: 'Out of Stock', value: 10 },
-  ];
+  // Process inventory data for the chart
+  const inventoryData: InventoryDataPoint[] = inventoryReport?.chart_data || [];
 
   const COLORS = ['#10B981', '#F59E0B', '#EF4444'];
 

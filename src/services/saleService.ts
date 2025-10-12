@@ -114,6 +114,12 @@ export interface SalesReport {
     total_revenue: number;
     total_transactions: number;
   };
+  chart_data?: {
+    [date: string]: {
+      sales_count: number;
+      revenue: number;
+    }
+  };
 }
 
 export interface PurchasesReport {
@@ -131,6 +137,10 @@ export interface InventoryReport {
     total_products: number;
     total_low_stock_products: number;
   };
+  chart_data?: {
+    name: string;
+    value: number;
+  }[];
 }
 
 export const getSalesReport = async (startDate?: string, endDate?: string): Promise<SalesReport> => {
