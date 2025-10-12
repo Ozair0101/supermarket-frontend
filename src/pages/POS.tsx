@@ -27,6 +27,7 @@ interface PosProduct {
   barcode: string;
   category: string;
   purchaseItems: PurchaseItem[];
+  quantity: number; // Add quantity field
 }
 
 interface CartItem extends PosProduct {
@@ -64,6 +65,11 @@ const POS: React.FC = () => {
           // Get the latest purchase item for pricing
           const latestPurchaseItem = product.purchase_items[0]; // Assuming first item has latest pricing
           
+          // Calculate total quantity (purchased - sold)
+          const purchasedQuantity = product.purchase_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
+          const soldQuantity = product.sale_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
+          const totalQuantity = purchasedQuantity - soldQuantity;
+          
           return {
             id: product.id,
             name: product.name,
@@ -73,7 +79,9 @@ const POS: React.FC = () => {
             barcode: latestPurchaseItem.barcode || product.sku || '',
             category: product.category?.name || '',
             // Include purchaseItems for reference
-            purchaseItems: product.purchase_items || []
+            purchaseItems: product.purchase_items || [],
+            // Add quantity field
+            quantity: totalQuantity
           };
         });
       setProducts(formattedProducts);
@@ -341,13 +349,15 @@ const POS: React.FC = () => {
                               <p className="text-sm text-gray-500 dark:text-gray-400">
                                 {product.category} • {product.barcode}
                               </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Qty: {product.quantity.toFixed(2)}
+                              </p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-medium text-gray-900 dark:text-white">
                                 ${Number(product.price).toFixed(2)}
                               </p>
                             </div>
-
                           </div>
                         </button>
                       </motion.li>
