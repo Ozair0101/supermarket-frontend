@@ -350,7 +350,7 @@ const POS: React.FC = () => {
                                 {product.category} • {product.barcode}
                               </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                Qty: {product.quantity.toFixed(2)}
+                                Qty: {Math.floor(product.quantity)}
                               </p>
                             </div>
                             <div className="text-right">

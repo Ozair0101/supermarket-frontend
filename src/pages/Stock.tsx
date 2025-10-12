@@ -174,7 +174,7 @@ const Stock: React.FC = () => {
                           ? 'text-yellow-700 dark:text-yellow-300' 
                           : 'text-gray-900 dark:text-white'
                       }`}>
-                        {isNaN(product.total_quantity) ? '0.00' : product.total_quantity.toFixed(2)}
+                        {isNaN(product.total_quantity) ? '0' : Math.floor(product.total_quantity)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
