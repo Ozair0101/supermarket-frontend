@@ -53,7 +53,7 @@ const ProductList: React.FC = () => {
                   </p>
                 </div>
                 <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                  <p>Category ID: {product.category_id || 'N/A'}</p>
+                  <p>Category ID: {product.category.name || 'N/A'}</p>
                 </div>
               </div>
               <div className="mt-2 flex items-center text-sm text-gray-500">
