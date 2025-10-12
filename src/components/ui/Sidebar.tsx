@@ -13,7 +13,8 @@ import {
   Receipt,
   UserCircle,
   Truck,
-  FileBarChart
+  FileBarChart,
+  Archive
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -33,6 +34,7 @@ const sidebarItems: SidebarItem[] = [
   { name: 'POS', href: '/pos', icon: ShoppingCart },
   { name: 'Sales', href: '/sales', icon: Receipt },
   { name: 'Purchases', href: '/purchases', icon: FileBarChart },
+  { name: 'Stock', href: '/stock', icon: Archive },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
