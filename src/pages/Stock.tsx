@@ -9,14 +9,6 @@ interface StockProduct extends Product {
     id: number;
     name: string;
   };
-  purchase_items?: Array<{
-    id: number;
-    quantity: number;
-  }>;
-  sale_items?: Array<{
-    id: number;
-    quantity: number;
-  }>;
 }
 
 const Stock: React.FC = () => {
@@ -45,10 +37,14 @@ const Stock: React.FC = () => {
       // Fetch all products (both with and without inventory)
       const data = await getProducts();
       
-      // Type assertion to include total_quantity
+      // Debug: Log the data structure to see what we're receiving
+      console.log('Product data:', data);
+      
+      // Use the backend's total_quantity directly instead of recalculating
       const productsWithQuantity = data.map(product => ({
         ...product,
-        total_quantity: calculateTotalQuantity(product)
+        // Use the backend calculated total_quantity, with a fallback to 0
+        total_quantity: typeof (product as any).total_quantity === 'number' ? (product as any).total_quantity : 0
       }));
       
       setProducts(productsWithQuantity);
@@ -59,13 +55,6 @@ const Stock: React.FC = () => {
       setError('Failed to load products');
       setLoading(false);
     }
-  };
-
-  // Calculate total quantity for a product
-  const calculateTotalQuantity = (product: any): number => {
-    const purchasedQuantity = product.purchase_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
-    const soldQuantity = product.sale_items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0;
-    return purchasedQuantity - soldQuantity;
   };
 
   if (loading) {
@@ -155,7 +144,7 @@ const Stock: React.FC = () => {
                 {filteredProducts.map((product) => (
                   <tr 
                     key={product.id}
-                    className={product.total_quantity >= 5 ? 'bg-red-50 dark:bg-red-900/30' : ''}
+                    className={product.total_quantity < 5 && product.total_quantity > 0 ? 'bg-yellow-50 dark:bg-yellow-900/30' : ''}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -181,25 +170,32 @@ const Stock: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className={`text-sm font-semibold ${
-                        product.total_quantity >= 5 
-                          ? 'text-red-700 dark:text-red-300' 
+                        product.total_quantity < 5 && product.total_quantity > 0
+                          ? 'text-yellow-700 dark:text-yellow-300' 
                           : 'text-gray-900 dark:text-white'
                       }`}>
-                        {product.total_quantity.toFixed(2)}
+                        {isNaN(product.total_quantity) ? '0.00' : product.total_quantity.toFixed(2)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        {product.total_quantity < (parseFloat(product.reorder_threshold) || 0) ? (
+                        {product.total_quantity <= 0 ? (
+                          <>
+                            <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+                            <span className="text-sm text-red-700 dark:text-red-300">
+                              Out of Stock
+                            </span>
+                          </>
+                        ) : product.total_quantity < (parseFloat(product.reorder_threshold) || 0) ? (
                           <>
                             <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
                             <span className="text-sm text-yellow-700 dark:text-yellow-300">
                               Low Stock
                             </span>
                           </>
-                        ) : product.total_quantity >= 5 ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100">
-                            High Stock (5+ items)
+                        ) : product.total_quantity < 5 ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
+                            Low Quantity (&lt;5 items)
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
