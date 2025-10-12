@@ -5,14 +5,28 @@ import { getProducts } from '../services/productService';
 import { createSale } from '../services/saleService';
 import type { Product as ApiProduct } from '../services/productService';
 
+interface PurchaseItem {
+  id?: number;
+  purchase_id?: number;
+  product_id: number;
+  barcode?: string;
+  batch_number?: string;
+  expiry_date?: string;
+  quantity: number;
+  unit_cost: number;
+  selling_price: number;
+  discount: number;
+  line_total: number;
+  product?: any;
+}
+
 interface PosProduct {
   id: number;
   name: string;
-  // Note: We no longer have selling_price on the product model
-  // In a real implementation, you would need to fetch pricing from purchase items
-  price: number; // This will need to be set appropriately
+  price: number;
   barcode: string;
   category: string;
+  purchaseItems: PurchaseItem[];
 }
 
 interface CartItem extends PosProduct {
@@ -42,16 +56,26 @@ const POS: React.FC = () => {
       // Fetch only products with inventory (quantity > 0)
       const data = await getProducts(true);
       // Convert API products to the format we need for the POS
-      // Note: In a real implementation, you would fetch pricing information from purchase items
-      const formattedProducts = data.map(product => ({
-        id: product.id,
-        name: product.name,
-        // For now, we'll set a default price of 0
-        // In a real implementation, you would fetch the actual price from purchase items
-        price: 0,
-        barcode: product.sku || '', // Using SKU as barcode for now
-        category: '', // We might need to fetch categories separately
-      }));
+      // We now properly extract pricing information from purchase items
+      const formattedProducts = data
+        // Type assertion to include relationships
+        .filter((product: any) => product.purchase_items && product.purchase_items.length > 0)
+        .map((product: any) => {
+          // Get the latest purchase item for pricing
+          const latestPurchaseItem = product.purchase_items[0]; // Assuming first item has latest pricing
+          
+          return {
+            id: product.id,
+            name: product.name,
+            // Set price from the latest purchase item's selling_price
+            price: latestPurchaseItem.selling_price || 0,
+            // Use the purchase item's barcode if available, otherwise fall back to product SKU
+            barcode: latestPurchaseItem.barcode || product.sku || '',
+            category: product.category?.name || '',
+            // Include purchaseItems for reference
+            purchaseItems: product.purchase_items || []
+          };
+        });
       setProducts(formattedProducts);
       setLoading(false);
     } catch (err) {
@@ -323,6 +347,7 @@ const POS: React.FC = () => {
                                 ${Number(product.price).toFixed(2)}
                               </p>
                             </div>
+
                           </div>
                         </button>
                       </motion.li>
