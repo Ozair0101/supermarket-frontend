@@ -21,6 +21,7 @@ import PurchaseDetails from './pages/PurchaseDetails';
 import NewSale from './pages/NewSale';
 import EditSale from './pages/EditSale';
 import SaleDetails from './pages/SaleDetails';
+import Stock from './pages/Stock';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -50,6 +51,7 @@ function App() {
               <Route path="customers/:id" element={<CustomerDetails />} />
               <Route path="customers/:id/edit" element={<EditCustomer />} />
               <Route path="reports" element={<Reports />} />
+              <Route path="stock" element={<Stock />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Routes>
