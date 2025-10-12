@@ -188,6 +188,9 @@ const POS: React.FC = () => {
       // Clear the cart
       setCart([]);
       
+      // Refresh product stock after successful sale
+      await fetchProducts();
+      
       // Show modern success message
       setMessage({ type: 'success', text: `Payment processed successfully! Invoice: ${invoiceNumber}` });
       
