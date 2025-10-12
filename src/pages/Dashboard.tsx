@@ -1,23 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Package, ShoppingCart, Users, DollarSign, TrendingUp, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getDashboardData } from '../services/dashboardService';
+import type { DashboardData } from '../services/dashboardService';
 
 const Dashboard: React.FC = () => {
-  // Mock data for dashboard cards
-  const stats = [
-    { name: 'Total Products', value: '1,248', change: '+12%', icon: Package },
-    { name: 'Sales Today', value: '$24,560', change: '+8.2%', icon: ShoppingCart },
-    { name: 'Customers', value: '1,842', change: '+3.1%', icon: Users },
-    { name: 'Revenue', value: '$186,420', change: '+15.3%', icon: DollarSign },
-  ];
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for recent activity
-  const recentActivity = [
-    { id: 1, product: 'Organic Apples', category: 'Fruits', quantity: 50, status: 'In Stock' },
-    { id: 2, product: 'Whole Milk', category: 'Dairy', quantity: 5, status: 'Low Stock' },
-    { id: 3, product: 'Whole Wheat Bread', category: 'Bakery', quantity: 12, status: 'In Stock' },
-    { id: 4, product: 'Free Range Eggs', category: 'Dairy', quantity: 0, status: 'Out of Stock' },
-  ];
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      const data = await getDashboardData();
+      setDashboardData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setLoading(false);
+    }
+  };
+
+  // Format stats data for dashboard cards
+  const stats = dashboardData ? [
+    { 
+      name: 'Total Products', 
+      value: dashboardData.stats.total_products.toLocaleString(), 
+      change: '+12%', 
+      icon: Package 
+    },
+    { 
+      name: 'Sales Today', 
+      value: `$${dashboardData.stats.sales_today.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+      change: '+8.2%', 
+      icon: ShoppingCart 
+    },
+    { 
+      name: 'Customers', 
+      value: dashboardData.stats.total_customers.toLocaleString(), 
+      change: '+3.1%', 
+      icon: Users 
+    },
+    { 
+      name: 'Total Revenue', 
+      value: `$${dashboardData.stats.total_revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+      change: '+15.3%', 
+      icon: DollarSign 
+    },
+  ] : [];
+
+  // Format inventory status data
+  const recentActivity = dashboardData ? [
+    ...dashboardData.inventory_status.low_stock_products.map((product: any) => ({
+      id: product.id,
+      product: product.name,
+      category: product.category?.name || 'N/A',
+      quantity: product.total_quantity,
+      status: 'Low Stock'
+    })),
+    ...dashboardData.inventory_status.out_of_stock_products.map((product: any) => ({
+      id: product.id,
+      product: product.name,
+      category: product.category?.name || 'N/A',
+      quantity: product.total_quantity,
+      status: 'Out of Stock'
+    }))
+  ].slice(0, 4) : [];
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
