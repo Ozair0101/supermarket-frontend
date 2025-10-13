@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Edit, Trash2, ArrowLeft, Printer } from 'lucide-react';
 import { getSale, deleteSale } from '../services/saleService';
+import { createPayment, getPaymentsForSale } from '../services/paymentService';
 import type { Sale } from '../services/saleService';
+import type { Payment } from '../services/paymentService';
 
 const SaleDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,22 +12,51 @@ const SaleDetails: React.FC = () => {
   const [sale, setSale] = useState<Sale | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'bank_transfer'>('cash');
 
   useEffect(() => {
     if (id) {
       fetchSale(parseInt(id));
+      fetchPayments(parseInt(id));
     }
   }, [id]);
 
   const fetchSale = async (saleId: number) => {
     try {
       const data = await getSale(saleId);
-      setSale(data);
+      // Ensure numeric fields are proper numbers
+      const parsedData = {
+        ...data,
+        sub_total: typeof data.sub_total === 'string' ? parseFloat(data.sub_total) : data.sub_total,
+        discount: typeof data.discount === 'string' ? parseFloat(data.discount) : data.discount,
+        tax: typeof data.tax === 'string' ? parseFloat(data.tax) : data.tax,
+        total: typeof data.total === 'string' ? parseFloat(data.total) : data.total,
+        paid: typeof data.paid === 'string' ? parseFloat(data.paid) : data.paid,
+        remaining: typeof data.remaining === 'string' ? parseFloat(data.remaining) : data.remaining
+      };
+      setSale(parsedData);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching sale:', err);
       setError('Failed to load sale details');
       setLoading(false);
+    }
+  };
+
+  const fetchPayments = async (saleId: number) => {
+    try {
+      const data = await getPaymentsForSale(saleId);
+      // Ensure payment amounts are proper numbers
+      const parsedData = data.map(payment => ({
+        ...payment,
+        amount: typeof payment.amount === 'string' ? parseFloat(payment.amount) : payment.amount
+      }));
+      setPayments(parsedData);
+    } catch (err) {
+      console.error('Error fetching payments:', err);
     }
   };
 
@@ -45,6 +76,46 @@ const SaleDetails: React.FC = () => {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleAddPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!sale?.id || !paymentAmount) return;
+
+    try {
+      const amount = parseFloat(paymentAmount);
+      const remaining = typeof sale.remaining === 'string' 
+        ? parseFloat(sale.remaining) 
+        : sale.remaining;
+        
+      if (amount <= 0 || amount > remaining) {
+        alert('Please enter a valid payment amount');
+        return;
+      }
+
+      const paymentData = {
+        payable_type: 'App\\Models\\Sale',
+        payable_id: sale.id,
+        amount: amount,
+        method: paymentMethod,
+        paid_at: new Date().toISOString().split('T')[0],
+      };
+
+      await createPayment(paymentData);
+      
+      // Refresh sale and payments
+      await fetchSale(sale.id);
+      await fetchPayments(sale.id);
+      
+      // Reset form
+      setPaymentAmount('');
+      setShowPaymentForm(false);
+      
+      alert('Payment added successfully');
+    } catch (err) {
+      console.error('Error adding payment:', err);
+      alert('Failed to add payment');
+    }
   };
 
   if (loading) {
@@ -144,7 +215,18 @@ const SaleDetails: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Financial Summary</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Financial Summary</h3>
+              {(sale.status === 'partial' || sale.status === 'unpaid') && 
+              (typeof sale.remaining === 'string' ? parseFloat(sale.remaining) : sale.remaining) > 0 && (
+                <button
+                  onClick={() => setShowPaymentForm(true)}
+                  className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Add Payment
+                </button>
+              )}
+            </div>
             <dl className="space-y-4">
               <div className="flex justify-between">
                 <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Subtotal</dt>
@@ -168,8 +250,14 @@ const SaleDetails: React.FC = () => {
               </div>
               <div className="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-2">
                 <dt className="text-sm font-medium text-gray-900 dark:text-white">Remaining</dt>
-                <dd className={`mt-1 text-sm font-medium ${sale.remaining < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
-                  ${Number(sale.remaining).toFixed(2)}
+                <dd className={`mt-1 text-sm font-medium ${
+                  (typeof sale.remaining === 'string' ? parseFloat(sale.remaining) : sale.remaining) < 0 
+                  ? 'text-red-600' 
+                  : 'text-gray-900 dark:text-white'
+                }`}>
+                  ${typeof sale.remaining === 'string' 
+                    ? parseFloat(sale.remaining).toFixed(2) 
+                    : sale.remaining?.toFixed(2)}
                 </dd>
               </div>
             </dl>
@@ -224,6 +312,114 @@ const SaleDetails: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment form modal */}
+      {showPaymentForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Add Payment</h3>
+            <form onSubmit={handleAddPayment}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max={typeof sale?.remaining === 'string' 
+                      ? parseFloat(sale.remaining) 
+                      : sale?.remaining}
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                    placeholder="0.00"
+                    required
+                  />
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Remaining: ${typeof sale?.remaining === 'string' 
+                      ? parseFloat(sale.remaining).toFixed(2) 
+                      : sale?.remaining?.toFixed(2) || '0.00'}
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Payment Method
+                  </label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value as 'cash' | 'card' | 'bank_transfer')}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPaymentForm(false)}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Add Payment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Payment history section */}
+      {payments.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Payment History</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Method
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {payments.map((payment) => (
+                  <tr key={payment.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      {new Date(payment.paid_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      ${typeof payment.amount === 'string' 
+                        ? parseFloat(payment.amount).toFixed(2) 
+                        : payment.amount?.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                      {payment.method.charAt(0).toUpperCase() + payment.method.slice(1)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
