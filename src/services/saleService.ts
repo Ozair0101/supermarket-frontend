@@ -48,7 +48,16 @@ export interface SaleFormData {
 export const getSales = async (): Promise<Sale[]> => {
   try {
     const response = await api.get<Sale[]>('/sales');
-    return response.data;
+    // Ensure numeric fields are proper numbers
+    return response.data.map(sale => ({
+      ...sale,
+      sub_total: typeof sale.sub_total === 'string' ? parseFloat(sale.sub_total) : sale.sub_total,
+      discount: typeof sale.discount === 'string' ? parseFloat(sale.discount) : sale.discount,
+      tax: typeof sale.tax === 'string' ? parseFloat(sale.tax) : sale.tax,
+      total: typeof sale.total === 'string' ? parseFloat(sale.total) : sale.total,
+      paid: typeof sale.paid === 'string' ? parseFloat(sale.paid) : sale.paid,
+      remaining: typeof sale.remaining === 'string' ? parseFloat(sale.remaining) : sale.remaining
+    }));
   } catch (error) {
     console.error('Error fetching sales:', error);
     throw error;
@@ -59,9 +68,18 @@ export const getSales = async (): Promise<Sale[]> => {
 export const getSale = async (id: number): Promise<Sale> => {
   try {
     const response = await api.get<Sale>(`/sales/${id}`);
-    return response.data;
+    // Ensure numeric fields are proper numbers
+    return {
+      ...response.data,
+      sub_total: typeof response.data.sub_total === 'string' ? parseFloat(response.data.sub_total) : response.data.sub_total,
+      discount: typeof response.data.discount === 'string' ? parseFloat(response.data.discount) : response.data.discount,
+      tax: typeof response.data.tax === 'string' ? parseFloat(response.data.tax) : response.data.tax,
+      total: typeof response.data.total === 'string' ? parseFloat(response.data.total) : response.data.total,
+      paid: typeof response.data.paid === 'string' ? parseFloat(response.data.paid) : response.data.paid,
+      remaining: typeof response.data.remaining === 'string' ? parseFloat(response.data.remaining) : response.data.remaining
+    };
   } catch (error) {
-    console.error(`Error fetching sale with ID ${id}:`, error);
+    console.error(`Error fetching sale with id ${id}:`, error);
     throw error;
   }
 };
