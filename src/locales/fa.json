@@ -1,0 +1,144 @@
+{
+  "common": {
+    "search_placeholder": "جستجو...",
+    "admin_user": "کاربر مدیر",
+    "light_mode": "حالت روشن",
+    "dark_mode": "حالت تیره",
+    "increased_by": "افزایش توسط",
+    "n_a": "ناموجود",
+    "export": "خروجی",
+    "actions": "اقدامات",
+    "name": "نام",
+    "contact": "تماس",
+    "address": "آدرس",
+    "balance": "بیلانس",
+    "invoice": "فاکتور",
+    "customer": "مشتری",
+    "supplier": "تأمین‌کننده",
+    "date": "تاریخ",
+    "total": "جمع",
+    "status": "وضعیت",
+    "add": "افزودن",
+    "new": "جدید"
+  },
+  "sidebar": {
+    "brand": "سوپرمارکت",
+    "dashboard": "داشبورد",
+    "products": "محصولات",
+    "categories": "دسته‌بندی‌ها",
+    "suppliers": "تأمین‌کنندگان",
+    "customers": "مشتریان",
+    "pos": "صندوق",
+    "sales": "فروش‌ها",
+    "purchases": "خریدها",
+    "stock": "انبار",
+    "reports": "گزارش‌ها",
+    "settings": "تنظیمات"
+  },
+  "dashboard": {
+    "title": "داشبورد",
+    "subtitle": "خوش آمدید! در فروشگاه شما امروز چه می‌گذرد.",
+    "stats": {
+      "total_products": "کل محصولات",
+      "sales_today": "فروش امروز",
+      "customers": "مشتریان",
+      "total_revenue": "کل درآمد"
+    },
+    "sales_overview": "نمای کلی فروش",
+    "sales_chart_placeholder": "نمودار فروش در اینجا نمایش داده می‌شود",
+    "inventory_status": "وضعیت موجودی",
+    "in_stock": "موجود",
+    "low_stock": "کمبود موجودی",
+    "out_of_stock": "ناموجود",
+    "qty_in_stock": "{{count}} عدد در انبار"
+  },
+  "status": {
+    "paid": "پرداخت شده",
+    "partial": "نیمه‌پرداخت",
+    "credit": "نسیه",
+    "pending": "در انتظار"
+  },
+  "pages": {
+    "products": {
+      "title": "محصولات",
+      "add": "افزودن محصول",
+      "create_new": "ایجاد محصول جدید",
+      "created_success": "محصول با موفقیت ایجاد شد!",
+      "create_failed": "ایجاد محصول ناموفق بود"
+    },
+    "categories": {
+      "title": "دسته‌بندی‌ها",
+      "add": "افزودن دسته‌بندی",
+      "create_new": "ایجاد دسته‌بندی جدید",
+      "created_success": "دسته‌بندی با موفقیت ایجاد شد!",
+      "create_failed": "ایجاد دسته‌بندی ناموفق بود"
+    },
+    "suppliers": {
+      "title": "تأمین‌کنندگان",
+      "add": "افزودن تأمین‌کننده",
+      "create_new": "ایجاد تأمین‌کننده جدید",
+      "created_success": "تأمین‌کننده با موفقیت ایجاد شد!",
+      "create_failed": "ایجاد تأمین‌کننده ناموفق بود"
+    },
+    "customers": {
+      "title": "مشتریان",
+      "subtitle": "مدیریت اطلاعات مشتریان",
+      "add": "افزودن مشتری",
+      "search_placeholder": "جستجوی مشتریان...",
+      "empty": "هیچ مشتری یافت نشد",
+      "delete_confirm": "آیا از حذف این مشتری مطمئن هستید؟",
+      "delete_failed": "حذف مشتری ناموفق بود"
+    },
+    "sales": {
+      "title": "فروش‌ها",
+      "subtitle": "مدیریت تمام تراکنش‌های فروش",
+      "new": "فروش جدید",
+      "search_placeholder": "جستجوی فروش‌ها...",
+      "empty": "هیچ فروش یافت نشد",
+      "walk_in": "مشتری حضوری",
+      "delete_confirm": "آیا از حذف این فروش مطمئن هستید؟",
+      "delete_failed": "حذف فروش ناموفق بود"
+    },
+    "purchases": {
+      "title": "خریدها",
+      "subtitle": "مدیریت تمام تراکنش‌های خرید",
+      "new": "خرید جدید",
+      "search_placeholder": "جستجوی خریدها...",
+      "empty": "هیچ خریدی یافت نشد",
+      "delete_confirm": "آیا از حذف این خرید مطمئن هستید؟",
+      "delete_failed": "حذف خرید ناموفق بود"
+    }
+  },
+  "header": {
+    "notifications": "اطلاعیه‌ها"
+  },
+  "purchase": {
+    "details": "جزئیات خرید",
+    "not_found": "خرید یافت نشد",
+    "failed_load": "بارگیری جزئیات خرید ناموفق بود",
+    "print": "چاپ",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "confirm_delete": "آیا از حذف این خرید مطمئن هستید؟",
+    "failed_delete": "حذف خرید ناموفق بود",
+    "info": "اطلاعات خرید",
+    "invoice_number": "شماره فاکتور",
+    "supplier": "تأمین‌کننده",
+    "purchase_date": "تاریخ خرید",
+    "status": "وضعیت",
+    "financial_summary": "خلاصه مالی",
+    "subtotal": "جمع جزء",
+    "discount": "تخفیف",
+    "tax": "مالیات",
+    "total": "جمع کل",
+    "paid": "پرداخت شده",
+    "remaining": "باقیمانده",
+    "items": "اقلام",
+    "add_payment": "افزودن پرداخت",
+    "payment_added": "پرداخت با موفقیت اضافه شد",
+    "failed_add_payment": "افزودن پرداخت ناموفق بود",
+    "valid_payment_amount": "لطفاً مقدار پرداخت معتبر وارد کنید"
+  }
+}
+
+
