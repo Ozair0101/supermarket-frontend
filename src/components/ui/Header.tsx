@@ -1,9 +1,12 @@
 import React from 'react';
 import { Bell, Search, User } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm">
@@ -15,13 +18,14 @@ const Header: React.FC = () => {
             </div>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t('common.search_placeholder')}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
         </div>
         
         <div className="flex items-center space-x-4">
+          <LanguageSwitcher />
           <button className="p-1 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none">
             <Bell className="h-6 w-6" />
           </button>
@@ -32,7 +36,7 @@ const Header: React.FC = () => {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Admin User
+                {t('common.admin_user')}
               </p>
             </div>
           </div>
