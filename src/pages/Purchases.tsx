@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Eye, Edit, Trash2, Download } from 'lucide-react';
 import { getPurchases, deletePurchase } from '../services/purchaseService';
 import type { Purchase } from '../services/purchaseService';
+import { useTranslation } from 'react-i18next';
 
 const Purchases: React.FC = () => {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchPurchases();
@@ -26,13 +28,13 @@ const Purchases: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this purchase?')) {
+    if (window.confirm(t('pages.purchases.delete_confirm'))) {
       try {
         await deletePurchase(id);
         fetchPurchases(); // Refresh the list
       } catch (error) {
         console.error('Error deleting purchase:', error);
-        alert('Failed to delete purchase');
+        alert(t('pages.purchases.delete_failed'));
       }
     }
   };
@@ -54,17 +56,15 @@ const Purchases: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Purchases</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Manage all purchase transactions
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('pages.purchases.title')}</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('pages.purchases.subtitle')}</p>
         </div>
         <button
           onClick={() => navigate('/purchases/new')}
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           <Plus className="mr-2 h-4 w-4" />
-          New Purchase
+          {t('pages.purchases.new')}
         </button>
       </div>
 
@@ -76,7 +76,7 @@ const Purchases: React.FC = () => {
             </div>
             <input
               type="text"
-              placeholder="Search purchases..."
+              placeholder={t('pages.purchases.search_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -84,7 +84,7 @@ const Purchases: React.FC = () => {
           </div>
           <button className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             <Download className="mr-2 h-4 w-4" />
-            Export
+            {t('common.export')}
           </button>
         </div>
 
@@ -93,22 +93,22 @@ const Purchases: React.FC = () => {
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Invoice
+                  {t('common.invoice')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Supplier
+                  {t('common.supplier')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Date
+                  {t('common.date')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Total
+                  {t('common.total')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Status
+                  {t('common.status')}
                 </th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
+                  {t('common.actions')}
                 </th>
               </tr>
             </thead>
@@ -116,7 +116,7 @@ const Purchases: React.FC = () => {
               {filteredPurchases.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                    No purchases found
+                    {t('pages.purchases.empty')}
                   </td>
                 </tr>
               ) : (
@@ -126,10 +126,10 @@ const Purchases: React.FC = () => {
                       {purchase.invoice_number || `INV-${purchase.id}`}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {purchase.supplier ? purchase.supplier.name : 'N/A'}
+                      {purchase.supplier ? purchase.supplier.name : t('common.n_a')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {purchase.purchase_date ? new Date(purchase.purchase_date).toLocaleDateString() : 'N/A'}
+                      {purchase.purchase_date ? new Date(purchase.purchase_date).toLocaleDateString() : t('common.n_a')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                       ${Number(purchase.total).toFixed(2)}
