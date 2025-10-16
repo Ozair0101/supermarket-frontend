@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import SupplierList from '../components/suppliers/SupplierList';
 import SupplierForm from '../components/suppliers/SupplierForm';
 import { createSupplier, type SupplierFormData } from '../services/supplierService';
+import { useTranslation } from 'react-i18next';
 
 const Suppliers: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const { t } = useTranslation();
 
   const handleCreateSupplier = async (data: SupplierFormData) => {
     try {
       await createSupplier(data);
-      setMessage({ type: 'success', text: 'Supplier created successfully!' });
+      setMessage({ type: 'success', text: t('pages.suppliers.created_success') });
       setShowForm(false);
       // Optionally refresh the supplier list here
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to create supplier';
+      const errorMessage = error.response?.data?.message || t('pages.suppliers.create_failed');
       setMessage({ type: 'error', text: errorMessage });
       console.error('Error creating supplier:', error);
     }
@@ -24,7 +26,7 @@ const Suppliers: React.FC = () => {
     <div className="py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Suppliers</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('pages.suppliers.title')}</h1>
           <button
             onClick={() => {
               setShowForm(true);
@@ -32,7 +34,7 @@ const Suppliers: React.FC = () => {
             }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Add Supplier
+            {t('pages.suppliers.add')}
           </button>
         </div>
       </div>
@@ -67,7 +69,7 @@ const Suppliers: React.FC = () => {
         <div className="py-4">
           {showForm ? (
             <div className="bg-white shadow sm:rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Create New Supplier</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">{t('pages.suppliers.create_new')}</h2>
               <SupplierForm
                 onSubmit={handleCreateSupplier}
                 onCancel={() => {
