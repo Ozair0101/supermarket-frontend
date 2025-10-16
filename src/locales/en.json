@@ -1,0 +1,144 @@
+{
+  "common": {
+    "search_placeholder": "Search...",
+    "admin_user": "Admin User",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "increased_by": "Increased by",
+    "n_a": "N/A",
+    "export": "Export",
+    "actions": "Actions",
+    "name": "Name",
+    "contact": "Contact",
+    "address": "Address",
+    "balance": "Balance",
+    "invoice": "Invoice",
+    "customer": "Customer",
+    "supplier": "Supplier",
+    "date": "Date",
+    "total": "Total",
+    "status": "Status",
+    "add": "Add",
+    "new": "New"
+  },
+  "sidebar": {
+    "brand": "Supermarket",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "categories": "Categories",
+    "suppliers": "Suppliers",
+    "customers": "Customers",
+    "pos": "POS",
+    "sales": "Sales",
+    "purchases": "Purchases",
+    "stock": "Stock",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's what's happening with your store today.",
+    "stats": {
+      "total_products": "Total Products",
+      "sales_today": "Sales Today",
+      "customers": "Customers",
+      "total_revenue": "Total Revenue"
+    },
+    "sales_overview": "Sales Overview",
+    "sales_chart_placeholder": "Sales chart visualization would appear here",
+    "inventory_status": "Inventory Status",
+    "in_stock": "In Stock",
+    "low_stock": "Low Stock",
+    "out_of_stock": "Out of Stock",
+    "qty_in_stock": "{{count}} in stock"
+  },
+  "status": {
+    "paid": "Paid",
+    "partial": "Partial",
+    "credit": "Credit",
+    "pending": "Pending"
+  },
+  "pages": {
+    "products": {
+      "title": "Products",
+      "add": "Add Product",
+      "create_new": "Create New Product",
+      "created_success": "Product created successfully!",
+      "create_failed": "Failed to create product"
+    },
+    "categories": {
+      "title": "Categories",
+      "add": "Add Category",
+      "create_new": "Create New Category",
+      "created_success": "Category created successfully!",
+      "create_failed": "Failed to create category"
+    },
+    "suppliers": {
+      "title": "Suppliers",
+      "add": "Add Supplier",
+      "create_new": "Create New Supplier",
+      "created_success": "Supplier created successfully!",
+      "create_failed": "Failed to create supplier"
+    },
+    "customers": {
+      "title": "Customers",
+      "subtitle": "Manage customer information",
+      "add": "Add Customer",
+      "search_placeholder": "Search customers...",
+      "empty": "No customers found",
+      "delete_confirm": "Are you sure you want to delete this customer?",
+      "delete_failed": "Failed to delete customer"
+    },
+    "sales": {
+      "title": "Sales",
+      "subtitle": "Manage all sales transactions",
+      "new": "New Sale",
+      "search_placeholder": "Search sales...",
+      "empty": "No sales found",
+      "walk_in": "Walk-in Customer",
+      "delete_confirm": "Are you sure you want to delete this sale?",
+      "delete_failed": "Error deleting sale"
+    },
+    "purchases": {
+      "title": "Purchases",
+      "subtitle": "Manage all purchase transactions",
+      "new": "New Purchase",
+      "search_placeholder": "Search purchases...",
+      "empty": "No purchases found",
+      "delete_confirm": "Are you sure you want to delete this purchase?",
+      "delete_failed": "Failed to delete purchase"
+    }
+  },
+  "header": {
+    "notifications": "Notifications"
+  },
+  "purchase": {
+    "details": "Purchase Details",
+    "not_found": "Purchase not found",
+    "failed_load": "Failed to load purchase details",
+    "print": "Print",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm_delete": "Are you sure you want to delete this purchase?",
+    "failed_delete": "Failed to delete purchase",
+    "info": "Purchase Information",
+    "invoice_number": "Invoice Number",
+    "supplier": "Supplier",
+    "purchase_date": "Purchase Date",
+    "status": "Status",
+    "financial_summary": "Financial Summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "tax": "Tax",
+    "total": "Total",
+    "paid": "Paid",
+    "remaining": "Remaining",
+    "items": "Items",
+    "add_payment": "Add Payment",
+    "payment_added": "Payment added successfully",
+    "failed_add_payment": "Failed to add payment",
+    "valid_payment_amount": "Please enter a valid payment amount"
+  }
+}
+
+
