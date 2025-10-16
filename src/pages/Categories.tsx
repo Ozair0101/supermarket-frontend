@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import CategoryList from '../components/categories/CategoryList';
 import CategoryForm from '../components/categories/CategoryForm';
 import { createCategory, type CategoryFormData } from '../services/categoryService';
+import { useTranslation } from 'react-i18next';
 
 const Categories: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const { t } = useTranslation();
 
   const handleCreateCategory = async (data: CategoryFormData) => {
     try {
       await createCategory(data);
-      setMessage({ type: 'success', text: 'Category created successfully!' });
+      setMessage({ type: 'success', text: t('pages.categories.created_success') });
       setShowForm(false);
       // Optionally refresh the category list here
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to create category';
+      const errorMessage = error.response?.data?.message || t('pages.categories.create_failed');
       setMessage({ type: 'error', text: errorMessage });
       console.error('Error creating category:', error);
     }
@@ -24,7 +26,7 @@ const Categories: React.FC = () => {
     <div className="py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Categories</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('pages.categories.title')}</h1>
           <button
             onClick={() => {
               setShowForm(true);
@@ -32,7 +34,7 @@ const Categories: React.FC = () => {
             }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Add Category
+            {t('pages.categories.add')}
           </button>
         </div>
       </div>
@@ -67,7 +69,7 @@ const Categories: React.FC = () => {
         <div className="py-4">
           {showForm ? (
             <div className="bg-white shadow sm:rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Create New Category</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">{t('pages.categories.create_new')}</h2>
               <CategoryForm
                 onSubmit={handleCreateCategory}
                 onCancel={() => {
