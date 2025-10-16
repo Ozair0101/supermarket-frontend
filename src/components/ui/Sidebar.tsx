@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarItem {
   name: string;
@@ -43,6 +44,7 @@ const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -90,7 +92,7 @@ const Sidebar: React.FC = () => {
               </div>
               {!isCollapsed && (
                 <span className="text-xl font-bold text-gray-800 dark:text-white">
-                  Supermarket
+                  {t('sidebar.brand')}
                 </span>
               )}
             </div>
@@ -123,7 +125,7 @@ const Sidebar: React.FC = () => {
                             exit={{ opacity: 0, width: 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            {item.name}
+                            {t(`sidebar.${item.name.toLowerCase()}`)}
                           </motion.span>
                         )}
                       </AnimatePresence>
@@ -168,7 +170,7 @@ const Sidebar: React.FC = () => {
                   : 'bg-gray-200 text-gray-800'
               }`}
             >
-              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              {theme === 'dark' ? t('common.light_mode') : t('common.dark_mode')}
             </button>
           </div>
         </div>
