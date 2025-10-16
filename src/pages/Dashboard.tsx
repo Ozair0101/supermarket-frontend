@@ -3,10 +3,12 @@ import { Package, ShoppingCart, Users, DollarSign, TrendingUp, BarChart3 } from 
 import { motion } from 'framer-motion';
 import { getDashboardData } from '../services/dashboardService';
 import type { DashboardData } from '../services/dashboardService';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchDashboardData();
@@ -26,25 +28,25 @@ const Dashboard: React.FC = () => {
   // Format stats data for dashboard cards
   const stats = dashboardData ? [
     { 
-      name: 'Total Products', 
+      name: t('dashboard.stats.total_products'), 
       value: dashboardData.stats.total_products.toLocaleString(), 
       change: '+12%', 
       icon: Package 
     },
     { 
-      name: 'Sales Today', 
+      name: t('dashboard.stats.sales_today'), 
       value: `$${dashboardData.stats.sales_today.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
       change: '+8.2%', 
       icon: ShoppingCart 
     },
     { 
-      name: 'Customers', 
+      name: t('dashboard.stats.customers'), 
       value: dashboardData.stats.total_customers.toLocaleString(), 
       change: '+3.1%', 
       icon: Users 
     },
     { 
-      name: 'Total Revenue', 
+      name: t('dashboard.stats.total_revenue'), 
       value: `$${dashboardData.stats.total_revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
       change: '+15.3%', 
       icon: DollarSign 
@@ -56,14 +58,14 @@ const Dashboard: React.FC = () => {
     ...dashboardData.inventory_status.low_stock_products.map((product: any) => ({
       id: product.id,
       product: product.name,
-      category: product.category?.name || 'N/A',
+      category: product.category?.name || t('common.n_a'),
       quantity: product.total_quantity,
       status: 'Low Stock'
     })),
     ...dashboardData.inventory_status.out_of_stock_products.map((product: any) => ({
       id: product.id,
       product: product.name,
-      category: product.category?.name || 'N/A',
+      category: product.category?.name || t('common.n_a'),
       quantity: product.total_quantity,
       status: 'Out of Stock'
     }))
@@ -80,10 +82,8 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Welcome back! Here's what's happening with your store today.
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('dashboard.title')}</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Stats Cards */}
@@ -132,15 +132,11 @@ const Dashboard: React.FC = () => {
         {/* Chart */}
         <div className="lg:col-span-2">
           <div className="rounded-lg bg-white dark:bg-gray-800 shadow p-6">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Sales Overview
-            </h2>
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('dashboard.sales_overview')}</h2>
             <div className="h-80 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className="text-center">
                 <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  Sales chart visualization would appear here
-                </p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('dashboard.sales_chart_placeholder')}</p>
               </div>
             </div>
           </div>
@@ -149,9 +145,7 @@ const Dashboard: React.FC = () => {
         {/* Recent Activity */}
         <div>
           <div className="rounded-lg bg-white dark:bg-gray-800 shadow p-6">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Inventory Status
-            </h2>
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('dashboard.inventory_status')}</h2>
             <div className="flow-root">
               <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                 {recentActivity.map((activity) => (
@@ -166,7 +160,7 @@ const Dashboard: React.FC = () => {
                         </p>
                       </div>
                       <div className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        {activity.quantity} in stock
+                        {t('dashboard.qty_in_stock', { count: activity.quantity })}
                       </div>
                       <div>
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -176,7 +170,7 @@ const Dashboard: React.FC = () => {
                               ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100' 
                               : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
                         }`}>
-                          {activity.status}
+                          {activity.status === 'In Stock' ? t('dashboard.in_stock') : activity.status === 'Low Stock' ? t('dashboard.low_stock') : t('dashboard.out_of_stock')}
                         </span>
                       </div>
                     </div>
