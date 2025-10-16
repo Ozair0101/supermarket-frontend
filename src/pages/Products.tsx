@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import ProductList from '../components/products/ProductList';
 import ProductForm from '../components/products/ProductForm';
 import { createProduct, type ProductFormData } from '../services/productService';
+import { useTranslation } from 'react-i18next';
 
 const Products: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const { t } = useTranslation();
 
   const handleCreateProduct = async (data: ProductFormData) => {
     try {
       await createProduct(data);
-      setMessage({ type: 'success', text: 'Product created successfully!' });
+      setMessage({ type: 'success', text: t('pages.products.created_success') });
       setShowForm(false);
       // Optionally refresh the product list here
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to create product';
+      const errorMessage = error.response?.data?.message || t('pages.products.create_failed');
       setMessage({ type: 'error', text: errorMessage });
       console.error('Error creating product:', error);
     }
@@ -24,7 +26,7 @@ const Products: React.FC = () => {
     <div className="py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Products</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{t('pages.products.title')}</h1>
           <button
             onClick={() => {
               setShowForm(true);
@@ -32,7 +34,7 @@ const Products: React.FC = () => {
             }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Add Product
+            {t('pages.products.add')}
           </button>
         </div>
       </div>
@@ -67,7 +69,7 @@ const Products: React.FC = () => {
         <div className="py-4">
           {showForm ? (
             <div className="bg-white shadow sm:rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Create New Product</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">{t('pages.products.create_new')}</h2>
               <ProductForm
                 onSubmit={handleCreateProduct}
                 onCancel={() => {
